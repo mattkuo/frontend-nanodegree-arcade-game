@@ -1,14 +1,14 @@
 var Entity = function(sprite) {
   this.sprite = sprite;
+  this.xVelocity = 0;
+  this.yVelocity = 0;
 }
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Entity.prototype.update = function(dt) {
-  // Movement code here
-  // You should multiply any movement by the dt parameter
-  // which will ensure the game runs at the same speed for
-  // all computers.
+  this.x = this.xVelocity * dt;
+  thix.y = this.yVelocity * dt;
 }
 
 // Draw the enemy on the screen, required method for game
