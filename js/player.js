@@ -3,24 +3,30 @@
 // a handleInput() method.
 var Player = function(sprite) {
   Entity.call(this, sprite);
+  this.x = 2 * Player.COL_WIDTH;
+  this.y = 5 * Player.ROW_HEIGHT;
 }
+
+Player.ROW_HEIGHT = 83;
+Player.COL_WIDTH = 101;
 
 Player.prototype = Object.create(Entity.prototype);
 Player.prototype.constructor = Entity;
 
 Player.prototype.handleInput = function(key) {
+  console.log(key);
   switch (key) {
-    case 37:
-      // left
+    case 'left':
+      this.x -= Player.COL_WIDTH;
       break;
-    case 38:
-      // top
+    case 'up':
+      this.y -= Player.ROW_HEIGHT;
       break;
-    case 39:
-      // right
+    case 'right':
+      this.x += Player.COL_WIDTH;
       break;
-    case 40:
-      // down
+    case 'down':
+      this.y += Player.ROW_HEIGHT;
       break;
   }
 }

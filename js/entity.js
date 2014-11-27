@@ -7,8 +7,8 @@ var Entity = function(sprite) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Entity.prototype.update = function(dt) {
-  this.x = this.xVelocity * dt;
-  thix.y = this.yVelocity * dt;
+  // this.x = this.xVelocity * dt;
+  // this.y = this.yVelocity * dt;
 }
 
 // Draw the enemy on the screen, required method for game
