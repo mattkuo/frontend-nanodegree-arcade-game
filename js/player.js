@@ -9,6 +9,7 @@ var Player = function(sprite) {
   this.destX = this.x;
   this.destY = this.y;
   this.direction = null;
+  this.isMoving = false;
 }
 
 // Player Constants
@@ -62,28 +63,36 @@ Player.prototype.update = function(dt) {
     this.y = this.destY;
     this.xVelocity = 0;
     this.yVelocity = 0;
+    this.isMoving = false;
   }
   
   this.parent.update.call(this, dt);
 }
 
 Player.prototype.handleInput = function(key) {
+  if (this.isMoving) {
+    return;
+  }
   switch (key) {
     case 'left':
       this.direction = Player.DIRECTIONS_.LEFT;
       this.move(this.x - Player.COL_WIDTH_, this.y);
+      this.isMoving = true;
       break;
     case 'up':
       this.direction = Player.DIRECTIONS_.UP;
       this.move(this.x, this.y - Player.ROW_HEIGHT_);
+      this.isMoving = true;
       break;
     case 'right':
       this.direction = Player.DIRECTIONS_.RIGHT;
       this.move(this.x + Player.COL_WIDTH_, this.y);
+      this.isMoving = true;
       break;
     case 'down':
       this.direction = Player.DIRECTIONS_.DOWN;
       this.move(this.x, this.y + Player.ROW_HEIGHT_);
+      this.isMoving = true;
       break;
   }
 }
