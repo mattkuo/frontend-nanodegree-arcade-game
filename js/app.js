@@ -5,9 +5,9 @@
 var allEnemies = [];
 var player = new Player('images/char-boy.png');
 
-// for (var i = 0; i < 5; i++) {
-//   allEnemies.push(new Enemy('images/enemy-bug.png'));
-// }
+for (var i = 0; i < 5; i++) {
+  allEnemies.push(new Enemy('images/enemy-bug.png'));
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
