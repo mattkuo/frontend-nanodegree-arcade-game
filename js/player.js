@@ -22,12 +22,15 @@ Player.DIRECTIONS_ = {
   UP: 2,
   DOWN: 3,
   STOP: 4
-}
+};
 
 Player.prototype = Object.create(Entity.prototype);
 Player.prototype.constructor = Entity;
 Player.prototype.parent = Entity.prototype;
 
+/**
+ * Checks if the player has moved past or is currently at its destination
+ */
 Player.prototype.isPastDestination_ = function() {
   if (this.direction === Player.DIRECTIONS_.STOP ||
     this.direction === null ||
@@ -40,7 +43,32 @@ Player.prototype.isPastDestination_ = function() {
     return false;
 }
 
+/**
+ * Check if given coordinates are legal (not off the board)
+ * @param {number} x - The x-coordinate
+ * @param {number} y - The y-coordinate
+ */
+Player.prototype.isCoordsOffBoard_ = function(x, y) {
+  if (x < 0 || x > ctx.canvas.width - 100) {
+    return true;
+  }
+  
+  if (y < -45 || y > ctx.canvas.height - 200) {
+    return true;
+  }
+  
+  return false;
+}
+
+/**
+ * Moves player to given coordinates if coordinates are legal
+ * @param  {number} x - The x-coordinate to move to
+ * @param  {number} y - The y-coordinate to move to
+ */
 Player.prototype.move = function(x, y) {
+  if (this.isCoordsOffBoard_(x, y)) {
+    return;
+  }
   if (this.x < x) {
     this.xVelocity = Player.VELOCITY_;
   } else if (this.x > x) {
@@ -56,6 +84,7 @@ Player.prototype.move = function(x, y) {
   this.destY = y;
 }
 
+// TODO: prevent player from 'overshooting' when moving
 Player.prototype.update = function(dt) {
   if (this.direction != Player.DIRECTIONS_.STOP && this.isPastDestination_()) {
     this.direction = Player.DIRECTIONS_.STOP;
