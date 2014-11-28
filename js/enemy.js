@@ -16,7 +16,6 @@ Enemy.prototype.constructor = Entity;
 Enemy.prototype.parent = Entity.prototype;
 
 Enemy.prototype.genRandomYCoord_ = function() {
-  // return Math.floor(Math.random() * (Enemy.MAX_Y - Enemy.MIN_Y + 1)) + Enemy.MIN_Y;
   var index = Math.floor(Math.random() * (Enemy.Y_RANGE.length));
   return Enemy.Y_RANGE[index];
 }
