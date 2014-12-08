@@ -15,7 +15,7 @@ var Player = function(sprite) {
 // Player Constants
 Player.ROW_HEIGHT_ = 83;
 Player.COL_WIDTH_ = 101;
-Player.VELOCITY_ = 600;
+Player.SPEED_ = 600;
 Player.DIRECTIONS_ = {
   LEFT: 0,
   RIGHT: 1,
@@ -27,21 +27,6 @@ Player.DIRECTIONS_ = {
 Player.prototype = Object.create(Entity.prototype);
 Player.prototype.constructor = Entity;
 Player.prototype.parent = Entity.prototype;
-
-/**
- * Checks if the player has moved past or is currently at its destination
- */
-Player.prototype.isPastDestination_ = function() {
-  if (this.direction === Player.DIRECTIONS_.STOP ||
-    this.direction === null ||
-    (this.direction === Player.DIRECTIONS_.RIGHT && this.x >= this.destX) ||
-    (this.direction === Player.DIRECTIONS_.LEFT && this.x <= this.destX) ||
-    (this.direction === Player.DIRECTIONS_.DOWN && this.y >= this.destY) ||
-    (this.direction === Player.DIRECTIONS_.UP && this.y <= this.destY)) {
-      return true;
-  }
-    return false;
-}
 
 /**
  * Check if given coordinates are legal (not off the board)
@@ -61,7 +46,8 @@ Player.prototype.isCoordsOffBoard_ = function(x, y) {
 }
 
 /**
- * Moves player to given coordinates if coordinates are legal
+ * Moves player to given coordinates by setting appropriate velocity if
+ * coordinates are legal.
  * @param  {number} x - The x-coordinate to move to
  * @param  {number} y - The y-coordinate to move to
  */
@@ -69,30 +55,43 @@ Player.prototype.move = function(x, y) {
   if (this.isCoordsOffBoard_(x, y)) {
     return;
   }
-  if (this.x < x) {
-    this.xVelocity = Player.VELOCITY_;
-  } else if (this.x > x) {
-    this.xVelocity = -Player.VELOCITY_;
+  
+  if (this.x === x || this.y === y) {
+    return;
   }
   
-  if (this.y < y) {
-    this.yVelocity = Player.VELOCITY_;
-  } else if (this.y > y) {
-    this.yVelocity = -Player.VELOCITY_;
-  }
+  this.xVelocity = this.x < x ? Player.SPEED_ : -Player.SPEED_;
+  this.yVelocity = this.y < y ? Player.SPEED_ : -Player.SPEED_;
+
   this.destX = x;
   this.destY = y;
 }
 
-// TODO: prevent player from 'overshooting' when moving
+/**
+ * Predict if next update will overshoot the destination. If so, set position to
+ * destination.
+ * @param  {number} dt - change of time since last update
+ */
 Player.prototype.update = function(dt) {
-  if (this.direction != Player.DIRECTIONS_.STOP && this.isPastDestination_()) {
-    this.direction = Player.DIRECTIONS_.STOP;
-    this.x = this.destX;
-    this.y = this.destY;
-    this.xVelocity = 0;
-    this.yVelocity = 0;
-    this.isMoving = false;
+  switch (this.direction) {
+    case Player.DIRECTIONS_.LEFT:
+    case Player.DIRECTIONS_.RIGHT:
+      if (Math.abs(this.x - this.destX) < Player.SPEED_ * dt) {
+        this.x = this.destX;
+        this.xVelocity = 0;
+        this.direction = Player.DIRECTIONS_.STOP;
+        this.isMoving = false;
+      }
+      break;
+    case Player.DIRECTIONS_.UP:
+    case Player.DIRECTIONS_.DOWN:
+      if (Math.abs(this.y - this.destY) < Player.SPEED_ * dt) {
+        this.y = this.destY;
+        this.yVelocity = 0;
+        this.direction = Player.DIRECTIONS_.STOP;
+        this.isMoving = false;
+      }
+      break;
   }
   
   this.parent.update.call(this, dt);
