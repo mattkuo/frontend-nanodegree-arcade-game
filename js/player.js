@@ -45,6 +45,14 @@ Player.prototype.isCoordsOffBoard_ = function(x, y) {
   return false;
 }
 
+Player.prototype.isMovementVertical_ = function() {
+  if (this.direction === Player.DIRECTIONS_.UP ||
+      this.direction === Player.DIRECTIONS_.DOWN) {
+    return true;
+  }
+  return false;
+}
+
 /**
  * Moves player to given coordinates by setting appropriate velocity if
  * coordinates are legal.
@@ -56,12 +64,11 @@ Player.prototype.move = function(x, y) {
     return;
   }
   
-  if (this.x === x || this.y === y) {
-    return;
+  if (this.isMovementVertical_()) {
+    this.yVelocity = this.y < y ? Player.SPEED_ : -Player.SPEED_;
+  } else {
+    this.xVelocity = this.x < x ? Player.SPEED_ : -Player.SPEED_;
   }
-  
-  this.xVelocity = this.x < x ? Player.SPEED_ : -Player.SPEED_;
-  this.yVelocity = this.y < y ? Player.SPEED_ : -Player.SPEED_;
 
   this.destX = x;
   this.destY = y;
